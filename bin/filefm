@@ -1,0 +1,72 @@
+#!/usr/bin/env ruby
+
+require 'filefm'
+require 'clamp'
+require 'uri'
+
+trap("INT") do
+  $stderr.puts "\nAborting."
+  exit 1
+end
+
+class UploadCommand < Clamp::Command
+
+  option ["-u","--user"], "PASSWORD", "User name when auth required"
+  option ["-p","--password"], "PASSWORD", "Password when auth required"
+  option "--insecure", :flag, "Secure upload using SSL", :default => false
+  option "--no-progressbar", :flag, "Do not display progress", :default => false 
+
+  parameter "SOURCE", "File to upload", :attribute_name => :source
+  parameter "TARGET", "Destination of the file", :attribute_name => :target
+
+  def execute
+    uri = URI.parse(target)
+    begin
+      FileFM.upload source, 
+                    target, 
+                    :username => user,
+                    :password => password,
+                    :secure => !insecure?,
+                    :progressbar => !no_progressbar?
+    rescue => e
+      puts e.class
+      puts e.backtrace
+      puts "ERROR: #{e.message}"
+    end
+  end
+
+end
+
+class DownloadCommand < Clamp::Command
+
+  option "--no-progressbar", :flag, "Do not display progress", :default => false
+  option ["-u","--user"], "PASSWORD", "User name when auth required"
+  option ["-p","--password"], "PASSWORD", "Password when auth required"
+  option ["-d","--destination"], "PATH", "Path where the file will be saved"
+  option "--insecure", :flag, "Secure upload using SSL", :default => true
+
+  parameter "FILES ...", "the thing to say", :attribute_name => :files
+
+  def execute
+    file = files.join(" ")
+    begin
+      FileFM.download file, :progressbar => !no_progressbar?,
+                            :secure => !insecure?,
+                            :username => user,
+                            :destination => destination,
+                            :password => password
+    rescue => e
+      puts "ERROR: #{e.message}"
+    end
+  end
+
+end
+
+class MainCommand < Clamp::Command
+
+  subcommand "download", "Initialize the repository", DownloadCommand
+  subcommand "upload", "Initialize the repository", UploadCommand 
+
+end
+
+MainCommand.run

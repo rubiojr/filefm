@@ -1,27 +1,26 @@
 # encoding: utf-8
 
 require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
+require 'filefm'
+
 require 'rake'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.version = FileFM::VERSION
   gem.name = "filefm"
   gem.homepage = "http://github.com/rubiojr/filefm"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Simple library to download/upload files}
+  gem.description = %Q{Simple library to download/upload files}
   gem.email = "rubiojr@frameos.org"
   gem.authors = ["Sergio Rubio"]
   # dependencies defined in Gemfile
+  gem.add_runtime_dependency 'clamp'
+  gem.add_runtime_dependency 'fog'
+  gem.add_runtime_dependency 'progressbar'
+  gem.add_runtime_dependency 'rest-client'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
@@ -32,22 +31,4 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-  test.rcov_opts << '--exclude "gems/*"'
-end
-
-task :default => :test
-
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "filefm #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
+task :default => :build
