@@ -64,8 +64,8 @@ end
 
 class MainCommand < Clamp::Command
 
-  subcommand "download", "Initialize the repository", DownloadCommand
-  subcommand "upload", "Initialize the repository", UploadCommand 
+  subcommand "download", "Download a file", DownloadCommand
+  subcommand "upload", "Upload a file", UploadCommand 
 
 end
 

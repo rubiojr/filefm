@@ -84,7 +84,6 @@ module FileFM
           end
         end
 
-        puts dest_file
         FileUtils.rm dest_file unless response.is_a? Net::HTTPOK
         raise "Error downlading file: #{response.class.to_s}" unless response.is_a? Net::HTTPOK
       end
