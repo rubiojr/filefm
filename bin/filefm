@@ -13,7 +13,7 @@ class UploadCommand < Clamp::Command
 
   option ["-u","--user"], "PASSWORD", "User name when auth required"
   option ["-p","--password"], "PASSWORD", "Password when auth required"
-  option "--insecure", :flag, "Secure upload using SSL", :default => false
+  option "--insecure", :flag, "Secure uploads using SSL", :default => false
   option "--no-progressbar", :flag, "Do not display progress", :default => false 
 
   parameter "SOURCE", "File to upload", :attribute_name => :source
@@ -43,7 +43,7 @@ class DownloadCommand < Clamp::Command
   option ["-u","--user"], "PASSWORD", "User name when auth required"
   option ["-p","--password"], "PASSWORD", "Password when auth required"
   option ["-d","--destination"], "PATH", "Path where the file will be saved"
-  option "--insecure", :flag, "Secure upload using SSL", :default => true
+  option "--insecure", :flag, "Secure download using SSL", :default => true
 
   parameter "FILES ...", "the thing to say", :attribute_name => :files
 
