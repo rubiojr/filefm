@@ -2,6 +2,7 @@ require 'progressbar'
 require 'net/http'
 require 'uri'
 require 'filefm/streaming_uploader'
+require 'filefm/config'
 require 'restclient'
 require 'fileutils'
 

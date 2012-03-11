@@ -1,0 +1,12 @@
+:default:
+  :swift_user: admin:admin
+  :swift_password: lkajsdflkj
+  :cloudfiles_key: lakjsldkfj
+  :cloudfiles_user: fooser
+  
+:testing:
+  :swift_user: admin:admin
+  :swift_password: lkajsdflkjaldf
+  :cloudfiles_key: lkjaslkfjlakd
+  :cloudfiles_user: fooser
+  
