@@ -13,6 +13,7 @@ class UploadCommand < Clamp::Command
 
   option ["-u","--user"], "PASSWORD", "User name when auth required"
   option ["-p","--password"], "PASSWORD", "Password when auth required"
+  option ["-A","--auth-url"], "URL", "Optional authentication URL", :attribute_name => :auth_url
   option "--insecure", :flag, "Secure uploads using SSL", :default => false
   option "--no-progressbar", :flag, "Do not display progress", :default => false 
 
@@ -27,6 +28,7 @@ class UploadCommand < Clamp::Command
                     :username => user,
                     :password => password,
                     :secure => !insecure?,
+                    :auth_url => auth_url,
                     :progressbar => !no_progressbar?
     rescue => e
       puts e.class

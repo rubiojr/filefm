@@ -44,6 +44,18 @@ Dead simple file uploads and downloads from/to:
                   :secure => false,           # no SSL
                   :progressbar => true        # print progress while uploading
 
+Using v2.0 authentication style (keystone)
+
+    FileFM::Uploaders::Swift.upload("/home/user/my-file", 
+                                    "swift://swift.myserver.com/container1/my-file", 
+                                    { 
+                                      :username => "tenant:username",
+                                      :password => "secret",
+                                      :auth_url => "http://my-keystone-server:5000/v2.0/tokens", 
+                                      :progressbar => true
+                                    })
+
+
 *Cloudfiles*
 
     FileFM.upload   "myfoo-file.txt",
@@ -61,6 +73,14 @@ Dead simple file uploads and downloads from/to:
                   --password secret \
                   /home/user/my-file \
                   swift://server/container1/my-file
+
+Using v2.0 authentication style (keystone)
+
+    filefm upload -A http://my-keystone-server:5000/v2.0/tokens \
+                  --insecure -u admin:admin -p ADMIN \
+                  /path/to/my/file \
+                  swift://swift.myserver.com/container1/my-file
+
 *Rackspace*
 
     filefm upload --user <rackspace-username> \
@@ -72,7 +92,14 @@ Dead simple file uploads and downloads from/to:
 
     filefm download http://my-server.com/my-big-file
 
-#
+
+## DEBUGGING ENABLED
+
+    DEBUG=yes filefm upload --insecure --user admin:admin \
+                  --password secret \
+                  /home/user/my-file \
+                  swift://server/container1/my-file
+
 # Copyright
 
 Copyright (c) 2012 Sergio Rubio. See LICENSE.txt for
