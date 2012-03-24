@@ -16,15 +16,19 @@ module FileFM
 
   require 'net/http'
 
-  class StreamingUploader
-
-    class << self
+  class StreamingUploaderMultipart
 
       def put(to_url, params = {}, &block)
         boundary = '----RubyMultipartClient' + rand(1000000).to_s + 'ZZZZZ'
         parts = []
         content_file = nil
         
+        params.each do |key, value|
+            if value.kind_of?(File)
+              filepath = value.path
+              parts << StreamPart.new(value, File.size(filepath))
+            end
+        end
         unless params.nil? || params.empty?
           params.each do |key, value|
             if value.kind_of?(File)
@@ -52,12 +56,10 @@ module FileFM
         headers = { 'Content-Length' => body_stream.size.to_s, 'Content-Type' => 'application/json' }.merge(params[:headers])
 
         req = Net::HTTP::Put.new(url.path, headers)
-        if ENV["DEBUG"] == "yes"
-          puts "HEADERS: " + headers.inspect
-          puts "HOST:    " + url.host 
-          puts "PORT:    " + url.port.to_s
-          puts "PATH:    " + url.path
-        end
+        Log.debug "HEADERS: " + headers.inspect
+        Log.debug "HOST:    " + url.host 
+        Log.debug "PORT:    " + url.port.to_s
+        Log.debug "PATH:    " + url.path
         
         req.content_length = body_stream.size
         req.content_type = 'multipart/form-data; boundary=' + boundary unless parts.empty?
@@ -65,7 +67,44 @@ module FileFM
         
         http = Net::HTTP.new(url.host, url.port)
         http.use_ssl = true if url.scheme == "https"
-        #http.verify_mode = OpenSSL::SSL::VERIFY_NONE if url.scheme == "https"
+        res = http.request(req)
+        res
+      end
+  end
+
+  class StreamingUploader
+
+    class << self
+
+      def put(to_url, params = {}, &block)
+        parts = []
+        content_file = nil
+        
+        params.each do |key, value|
+            if value.kind_of?(File)
+              filepath = value.path
+              parts << StreamPart.new(value, File.size(filepath))
+            end
+        end
+        
+        body_stream = MultipartStream.new(parts, block)
+        
+        url = URI.parse(to_url)
+        
+        headers = { 'Content-Length' => body_stream.size.to_s }.merge(params[:headers])
+
+        req = Net::HTTP::Put.new(url.path, headers)
+        Log.debug "HEADERS: " + headers.inspect
+        Log.debug "HOST:    " + url.host 
+        Log.debug "PORT:    " + url.port.to_s
+        Log.debug "PATH:    " + url.path
+        
+        req.content_length = body_stream.size
+        #req.content_type = i
+        req.body_stream = body_stream
+        
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true if url.scheme == "https"
         res = http.request(req)
         res
       end
