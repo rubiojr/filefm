@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'rubygems'
-require 'filefm'
+require './lib/filefm.rb'
 
 require 'rake'
 

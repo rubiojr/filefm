@@ -20,7 +20,7 @@ module FileFM
     Log.debug "Initializing logger"
   end
 
-  VERSION="0.1"
+  VERSION="0.1.1"
 
   def self.download(link, opts={})
     uri = URI.parse link
