@@ -66,7 +66,11 @@ module FileFM
         puts "unknown file size for #{@filename} but downloading..." if @size.nil?
         #puts @link.to_s
         
-        dest_file = @location + (@filename ||= File.basename(uri.path))
+        if opts[:output]
+          dest_file = opts[:output]
+        else
+          dest_file = @location + (@filename ||= File.basename(uri.path))
+        end
         response = http.request(request) do |response|
           if opts[:progressbar]
             bar = ProgressBar.new("Progress", @size.to_i) unless @size.nil?
