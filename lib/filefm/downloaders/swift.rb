@@ -22,11 +22,11 @@ module FileFM
           :provider => 'Rackspace',
           :rackspace_username => username,
           :rackspace_api_key => password,
-          :rackspace_auth_url => "#{scheme}://#{uri.host}/auth/v1.0"
+          :rackspace_auth_url => "#{scheme}://#{uri.host}:#{uri.port}/auth/v1.0"
                         })
 
 
-        out = RestClient.get "#{scheme}://#{uri.host}/auth/v1.0", 'X-Storage-User' => username, 'X-Storage-Pass' => password
+        out = RestClient.get "#{scheme}://#{uri.host}:#{uri.port}/auth/v1.0", 'X-Storage-User' => username, 'X-Storage-Pass' => password
         storage_url = out.headers[:x_storage_url]
         auth_token = out.headers[:x_auth_token]
         raise "Error authenticating" unless out.code == 200
