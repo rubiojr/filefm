@@ -62,8 +62,8 @@ module FileFM
           auth_token = out["X-Auth-Token"]
         else
           Log.debug "Using Swift legacy auth"
-          Log.debug "Legacy auth URL #{scheme}://#{uri.host}/auth/v1.0"
-          out = RestClient.get "#{scheme}://#{uri.host}/auth/v1.0", 'X-Storage-User' => username, 'X-Storage-Pass' => password
+          Log.debug "Legacy auth URL #{scheme}://#{uri.host}:#{uri.port}/auth/v1.0"
+          out = RestClient.get "#{scheme}://#{uri.host}:#{uri.port}/auth/v1.0", 'X-Storage-User' => username, 'X-Storage-Pass' => password
           storage_url = out.headers[:x_storage_url]
           auth_token = out.headers[:x_auth_token]
           raise "Error authenticating" unless out.code == 200
@@ -93,7 +93,13 @@ module FileFM
               yield size
             elsif options[:progressbar]
              count += size
-             per = (100*count)/fsize 
+             # take care of divide by zero 
+             per = 0
+             if fsize == 0
+               per = 100
+             else
+               per = (100*count)/fsize rescue 100
+             end
              per = 100 if per > 100
              pbar.set per
             else
