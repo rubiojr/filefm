@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>FileFM by rubiojr</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>FileFM</h1>
+        <h2>Dead simple file uploads and downloads, with progressbar!</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/rubiojr/filefm/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/rubiojr/filefm/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/rubiojr/filefm" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>FileFM</h1>
+
+<p>Dead simple file uploads and downloads from/to:</p>
+
+<ul>
+<li>HTTP</li>
+<li>Rackspace Cloudfiles</li>
+<li>Openstack Swift</li>
+</ul><h2>API</h2>
+
+<h3>Downloadinf files</h3>
+
+<p><em>Swift</em></p>
+
+<pre><code>FileFM.download "swift://swift-server.com/container1/foofile", 
+                :progressbar =&gt; true,
+                :secure =&gt; false,
+                :destination =&gt; '/tmp/myfoofile',
+                :username =&gt; 'admin:admin',
+                :password =&gt; 'admin'
+</code></pre>
+
+<p><em>Cloudfiles</em></p>
+
+<pre><code>FileFM.download "cloudfiles://container1/foofile", 
+                :progressbar =&gt; true,
+                :destination =&gt; '/tmp/myfoofile',
+                :username =&gt; 'foo-user',
+                :password =&gt; 'RACKSPACE-API-KEY-HERE'
+</code></pre>
+
+<p><em>HTTP</em></p>
+
+<pre><code>FileFM.download "http://imaginary-server/foo-linux.iso", 
+                :progressbar =&gt; true,
+                :destination =&gt; '/tmp/ubuntu.iso'
+</code></pre>
+
+<h3>Uploading files</h3>
+
+<p><em>Swift</em></p>
+
+<pre><code>FileFM.upload "myfoo-file.txt, 
+              "swift://swift-server.com/container1/myfoo-file.txt", 
+              :username =&gt; "admin:admin",
+              :password =&gt; "admin",
+              :secure =&gt; false,           # no SSL
+              :progressbar =&gt; true        # print progress while uploading
+</code></pre>
+
+<p>Using v2.0 authentication style (keystone)</p>
+
+<pre><code>FileFM::Uploaders::Swift.upload("/home/user/my-file", 
+                                "swift://swift.myserver.com/container1/my-file", 
+                                { 
+                                  :username =&gt; "tenant:username",
+                                  :password =&gt; "secret",
+                                  :auth_url =&gt; "http://my-keystone-server:5000/v2.0/tokens", 
+                                  :progressbar =&gt; true
+                                })
+</code></pre>
+
+<p><em>Cloudfiles</em></p>
+
+<pre><code>FileFM.upload   "myfoo-file.txt",
+                "cloudfiles://container1/foofile", 
+                :progressbar =&gt; true,
+                :username =&gt; 'foo-user',
+                :password =&gt; 'RACKSPACE-API-KEY-HERE'
+</code></pre>
+
+<h2>Command line</h2>
+
+<p><em>Swift</em></p>
+
+<pre><code>filefm upload --insecure --user admin:admin \
+              --password secret \
+              /home/user/my-file \
+              swift://server/container1/my-file
+</code></pre>
+
+<p>Using v2.0 authentication style (keystone)</p>
+
+<pre><code>filefm upload -A http://my-keystone-server:5000/v2.0/tokens \
+              --insecure -u admin:admin -p ADMIN \
+              /path/to/my/file \
+              swift://swift.myserver.com/container1/my-file
+</code></pre>
+
+<p><em>Rackspace</em></p>
+
+<pre><code>filefm upload --user &lt;rackspace-username&gt; \
+              --password &lt;RACKSPACE_API&gt; \
+              &lt;path-to-file&gt; \
+              cloudfiles://container1/foo.tmp
+</code></pre>
+
+<p><em>HTTP</em></p>
+
+<pre><code>filefm download <a href="http://my-server.com/my-big-file">http://my-server.com/my-big-file</a>
+</code></pre>
+
+<h2>DEBUGGING ENABLED</h2>
+
+<pre><code>DEBUG=yes filefm upload --insecure --user admin:admin \
+              --password secret \
+              /home/user/my-file \
+              swift://server/container1/my-file
+</code></pre>
+
+<h1>Copyright</h1>
+
+<p>Copyright (c) 2012 Sergio Rubio. See LICENSE.txt for
+further details.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
